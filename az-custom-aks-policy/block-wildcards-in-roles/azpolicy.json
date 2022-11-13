@@ -1,0 +1,70 @@
+{
+    "properties": {
+        "displayName": "Custom Kubernetes - Restrict Wildcards in Verbs and Resources for Roles and ClusterRoles",
+        "policyType": "Custom",
+        "mode": "Microsoft.Kubernetes.Data",
+        "description": "Custom Kubernetes - Restrict Wildcards in Verbs and Resources for Roles and ClusterRoles.",
+        "metadata": {
+            "version": "1.0.0",
+            "category": "Kubernetes"
+        },
+        "parameters": {
+            "effect": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "Effect",
+                    "description": "'Audit' allows a non-compliant resource to be created or updated, but flags it as non-compliant. 'Deny' blocks the non-compliant resource creation or update. 'Disabled' turns off the policy."
+                },
+                "allowedValues": [
+                    "audit",
+                    "Audit",
+                    "deny",
+                    "Deny",
+                    "disabled",
+                    "Disabled"
+                ],
+                "defaultValue": "Audit"
+            },
+            "excludedNamespaces": {
+                "type": "Array",
+                "metadata": {
+                    "displayName": "Namespace exclusions",
+                    "description": "List of Kubernetes namespaces to exclude from policy evaluation. System namespaces \"kube-system\", \"gatekeeper-system\" and \"azure-arc\" are always excluded by design."
+                },
+                "defaultValue": [
+                    "kube-system",
+                    "gatekeeper-system",
+                    "azure-arc"
+                ]
+            }
+        },
+        "policyRule": {
+            "if": {
+                "field": "type",
+                "in": [
+                    "Microsoft.Kubernetes/connectedClusters",
+                    "Microsoft.ContainerService/managedClusters"
+                ]
+            },
+            "then": {
+                "effect": "[parameters('effect')]",
+                "details": {
+                    "templateInfo": {
+                        "sourceType": "Base64Encoded",
+                        "content": "YXBpVmVyc2lvbjogdGVtcGxhdGVzLmdhdGVrZWVwZXIuc2gvdjFiZXRhMQpraW5kOiBDb25zdHJhaW50VGVtcGxhdGUKbWV0YWRhdGE6CiAgbmFtZTogazhzYmxvY2t3aWxkY2FyZHNpbnJvbGVzYW5kY2x1c3RlcnJvbGVzCiAgYW5ub3RhdGlvbnM6CiAgICBkZXNjcmlwdGlvbjogQmxvY2sgd2lsZGNhcmRzIGluIFJvbGVzIGFuZCBDbHVzdGVyUm9sZSBWZXJicy4Kc3BlYzoKICBjcmQ6CiAgICBzcGVjOgogICAgICBuYW1lczoKICAgICAgICBraW5kOiBrOHNibG9ja3dpbGRjYXJkc2lucm9sZXNhbmRjbHVzdGVycm9sZXMKICB0YXJnZXRzOgogICAgLSB0YXJnZXQ6IGFkbWlzc2lvbi5rOHMuZ2F0ZWtlZXBlci5zaAogICAgICByZWdvOiB8CiAgICAgICAgcGFja2FnZSBrOHNibG9ja3dpbGRjYXJkc2lucm9sZXNhbmRjbHVzdGVycm9sZXMKCiAgICAgICAgdmlvbGF0aW9uW3sibXNnIjogbXNnLCAiZGV0YWlscyI6IHt9fV17CiAgICAgICAgaW5wdXQucmV2aWV3Lm9iamVjdC5raW5kID09ICJSb2xlIgogICAgICAgIGlucHV0LnJldmlldy5vYmplY3QucnVsZXNbX10udmVyYnNbX10gPT0gIioiCiAgICAgICAgbXNnIDo9ICJXaWxkY2FyZHMgYXJlIHByb2hpYml0ZWQgaW4gUm9sZXMgVmVyYnMiCiAgICAgICAgfQogICAgICAgIAogICAgICAgIHZpb2xhdGlvblt7Im1zZyI6IG1zZywgImRldGFpbHMiOiB7fX1dewogICAgICAgIGlucHV0LnJldmlldy5vYmplY3Qua2luZCA9PSAiUm9sZSIKICAgICAgICBpbnB1dC5yZXZpZXcub2JqZWN0LnJ1bGVzW19dLnJlc291cmNlc1tfXSA9PSAiKiIKICAgICAgICBtc2cgOj0gIldpbGRjYXJkcyBhcmUgcHJvaGliaXRlZCBpbiBSb2xlcyBSZXNvdXJjZXMiCiAgICAgICAgfQoKICAgICAgICB2aW9sYXRpb25beyJtc2ciOiBtc2csICJkZXRhaWxzIjoge319XXsKICAgICAgICBpbnB1dC5yZXZpZXcub2JqZWN0LmtpbmQgPT0gIkNsdXN0ZXJSb2xlIgogICAgICAgIGlucHV0LnJldmlldy5vYmplY3QucnVsZXNbX10udmVyYnNbX10gPT0gIioiCiAgICAgICAgbXNnIDo9ICJXaWxkY2FyZHMgYXJlIHByb2hpYml0ZWQgaW4gQ2x1c3RlclJvbGVzIFZlcmJzIgogICAgICAgIH0KICAgICAgICAKICAgICAgICB2aW9sYXRpb25beyJtc2ciOiBtc2csICJkZXRhaWxzIjoge319XXsKICAgICAgICBpbnB1dC5yZXZpZXcub2JqZWN0LmtpbmQgPT0gIkNsdXN0ZXJSb2xlIgogICAgICAgIGlucHV0LnJldmlldy5vYmplY3QucnVsZXNbX10ucmVzb3VyY2VzW19dID09ICIqIgogICAgICAgIG1zZyA6PSAiV2lsZGNhcmRzIGFyZSBwcm9oaWJpdGVkIGluIENsdXN0ZXJSb2xlcyBSZXNvdXJjZXMiCiAgICAgICAgfSAgICA="
+                    },
+                    "values": {
+                        "excludedNamespaces": "[parameters('excludedNamespaces')]"
+                    },
+                    "apiGroups": [
+                        "rbac.authorization.k8s.io"
+                    ],
+                    "kinds": [
+                        "Role",
+                        "ClusterRole"
+                    ]
+                }
+            }
+        }
+    }
+}

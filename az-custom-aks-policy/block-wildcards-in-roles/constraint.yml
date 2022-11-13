@@ -1,0 +1,39 @@
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: k8sblockwildcardsinrolesandclusterroles
+  annotations:
+    description: Block wildcards in Roles and ClusterRole Verbs.
+spec:
+  crd:
+    spec:
+      names:
+        kind: k8sblockwildcardsinrolesandclusterroles
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8sblockwildcardsinrolesandclusterroles
+
+        violation[{"msg": msg, "details": {}}]{
+        input.review.object.kind == "Role"
+        input.review.object.rules[_].verbs[_] == "*"
+        msg := "Wildcards are prohibited in Roles Verbs"
+        }
+        
+        violation[{"msg": msg, "details": {}}]{
+        input.review.object.kind == "Role"
+        input.review.object.rules[_].resources[_] == "*"
+        msg := "Wildcards are prohibited in Roles Resources"
+        }
+
+        violation[{"msg": msg, "details": {}}]{
+        input.review.object.kind == "ClusterRole"
+        input.review.object.rules[_].verbs[_] == "*"
+        msg := "Wildcards are prohibited in ClusterRoles Verbs"
+        }
+        
+        violation[{"msg": msg, "details": {}}]{
+        input.review.object.kind == "ClusterRole"
+        input.review.object.rules[_].resources[_] == "*"
+        msg := "Wildcards are prohibited in ClusterRoles Resources"
+        }    
